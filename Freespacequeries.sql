@@ -1,5 +1,3 @@
-
-/*
 CREATE DATABASE Freespace
 GO
  
@@ -97,7 +95,6 @@ Values
 	('Very Busy', 80)
 GO
 	
-*/
 
 SELECT * FROM Locations
 SELECT * FROM StatusReport
