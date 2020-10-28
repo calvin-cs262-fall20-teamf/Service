@@ -1,106 +1,68 @@
-CREATE DATABASE Freespace
-GO
- 
-USE Freespace
-GO
- 
---CREATE SCHEMA ActiveStudents
- 
+-- List of locations shown in the app
 CREATE TABLE Locations (
-IdNumber int IDENTITY(1,1) PRIMARY KEY,
+IdNumber int SERIAL PRIMARY KEY,
 LocationName varchar(40),
-MaxCapacity int,
-)
-GO
- 
- 
-CREATE TABLE  StatusReport(
-IdNumber int IDENTITY(1,1),
-ReportedDateTime DATETIME,
+MaxCapacity int);
+
+
+-- List of current status reports made by users
+CREATE TABLE CurrentStatus (
+ActivityStatus varchar(15) PRIMARY KEY,
 LocationID int references Locations(IdNumber),
--- UserId int,
-CurrentStatus varchar(15) PRIMARY KEY
-)
-GO
- 
--- Should we make separate tables for each dining hall?
-CREATE TABLE PopulationReport (
-IdNumber int IDENTITY (1,1),
+ReportedTime TIMESTAMP);
+
+
+-- List of actual card swipe number reports from dining halls
+CREATE TABLE CurrentPopulation (
+-- We will come up with an algorithm to calculate estimated number of people currently at the dining hall
 LocationID int,
+EstimatedPopulation int,
 ReportedTime TIME,
--- use DAY(date) function
-ReportedDay varchar(20),
-PopulationReported int,
-EstimatedPopulation int PRIMARY KEY,
-)
-GO
- 
-CREATE TABLE CalvinLocation (
-IdNumber int IDENTITY(1,1) references Locations(IdNumber),
-CurrentStatus varchar(15) references StatusReport(CurrentStatus),
-EstimatedPopulation int references PopulationReport(EstimatedPopulation),
-)
-GO
- 
+ReportedDay varchar(10),
+CardSwipeNumber int);
+
+
 CREATE TABLE Users (
-IdNumber int IDENTITY (1,1) PRIMARY KEY,
-UserType varchar(20),
 UserId varchar(25),
-UserPassword varchar(50)
-)
-GO
+UserPassword varchar(50),
+UserType varchar(20),
+PRIMARY KEY (UserID, UserType));
 
-
+    
 INSERT INTO Locations (LocationName, MaxCapacity)
 VALUES
-('Commons Dining Hall',
-500),
-('Knollcrest Dining Hall',
-400),
-('Uppercrust',
-100)
-GO
+('Commons Dining Hall', 500),
+('Knollcrest Dining Hall', 400),
+('Uppercrust', 100);
 
 INSERT INTO Users (
-	UserType, UserId, UserPassword) 
+    UserId, UserPassword, UserType) 
 VALUES 
-('Dining Hall Faculty', 'Id_1', 'Password_1'),
-('Dining Hall Faculty', 'Id_2', 'Password_2'),
-('Student', 'StudentId_1', 'Password_3')
-GO 
+('Id_1', 'Password_1', 'Dining Hall Faculty'),
+('Id_2', 'Password_2', 'Dining Hall Faculty'),
+('UserId_1', 'Password_3', 'User');
 
 
-INSERT INTO StatusReport(
-	ReportedDateTime, LocationID, CurrentStatus)
+INSERT INTO CurrentStatus(
+    Status, LocationID, ReportedTime )
 VALUES
-	('2020-10-16 13:33:33', 1, 'Busy'),
-	('2020-10-16 14:22:22', 2, 'Normal'),
-	('2020-10-16 15:11:11', 3, 'Very Busy')
-GO
+    ('Busy',  1, '2020-10-16 13:33:33'),
+    ('Normal', 2, '2020-10-16 14:22:22'),
+    ('Very Busy', 3, '2020-10-16 15:11:11');
 
 
-INSERT INTO PopulationReport(
-	LocationId,ReportedTime, ReportedDay, PopulationReported, EstimatedPopulation)
+
+INSERT INTO CurrentPopulation(
+    EstimatedPopulation, LocationId, ReportedTime, ReportedDay, CardSwipeNumber )
 VALUES
-	(1, '13:33:33', 'Monday', 350, 350),
-	(2, '14:22:22', 'Tuesday', 200, 200),
-	(3, '15:11:11', 'Wednesday', 80, 80)
-GO
+    (1, 200, '13:30:00', 'Monday', 100),
+    (1, 150, '13:45:00', 'Monday', 50),
+    (2, 150,  '13:30:00', 'Monday', 60),
+    (2, 160,  '13:45:00', 'Monday', 100),
+    (3, 140,  '13:30:00', 'Monday', 80),
+    (3, 200,'13:45:00', 'Monday', 120);
 
-INSERT INTO CalvinLocation(
-	CurrentStatus, EstimatedPopulation)
-Values 
-	('Busy', 350),
-	('Normal', 200),
-	('Very Busy', 80)
-GO
-	
 
-SELECT * FROM Locations
-SELECT * FROM StatusReport
-SELECT * FROM PopulationReport
-SELECT * FROM CalvinLocation
-SELECT * FROM Users
 
 
 
