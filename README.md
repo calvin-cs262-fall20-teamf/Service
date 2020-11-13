@@ -11,6 +11,9 @@ This is the data service application for the Freespace application
 
 URL 
 https://calvinfreespace.herokuapp.com/locations
+
 https://calvinfreespace.herokuapp.com/currentStatus
+
 https://calvinfreespace.herokuapp.com/currentPopulation
+
 https://calvinfreespace.herokuapp.com/users
