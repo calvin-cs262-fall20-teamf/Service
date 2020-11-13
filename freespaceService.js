@@ -16,6 +16,13 @@ const port = process.env.PORT || 3000;
 const router = express.Router();
 router.use(express.json());
 
+router.get("/", readHelloMessage);
+// router.get("/players", readPlayers);
+// router.get("/players/:id", readPlayer);
+// router.put("/players/:id", updatePlayer);
+// router.post('/players', createPlayer);
+// router.delete('/players/:id', deletePlayer);
+
 app.use(router);
 app.use(errorHandler);
 app.listen(port, () => console.log(`Listening on port ${port}`));
