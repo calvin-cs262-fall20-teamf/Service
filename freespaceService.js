@@ -17,12 +17,8 @@ const router = express.Router();
 router.use(express.json());
 
 router.get("/", readHelloMessage);
-router.get("/locations", readLocations);
-router.get("/location/:id", readLocation);
-router.get("/currentStatus", readCurrentStatus)
-// router.put("/players/:id", updatePlayer);
-// router.post('/players', createPlayer);
-// router.delete('/players/:id', deletePlayer);
+router.get("/curentpopulation", readCurrentPopulation);
+router.get("/users", readUsers);
 
 app.use(router);
 app.use(errorHandler);
@@ -49,8 +45,9 @@ function readHelloMessage(req, res) {
     res.send('Hello, CS 262 Monopoly service!');
 }
 
-function readLocations(req, res, next) {
-    db.many("SELECT * FROM Locations")
+function readCurrentPopulation(req, res, next) {
+    console.log("s")
+    db.many("SELECT * FROM currentpopulation")
         .then(data => {
             res.send(data);
         })
@@ -59,18 +56,8 @@ function readLocations(req, res, next) {
         })
 }
 
-function readLocation(req, res, next) {
-    db.oneOrNone(`SELECT * FROM Locations WHERE id=${req.params.id}`)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
-function readCurrentStatus(req, res, next) {
-    db.many("SELECT * FROM CurrentStatus")
+function readCurrentPopulation(req, res, next) {
+    db.many("SELECT * FROM users")
         .then(data => {
             res.send(data);
         })
