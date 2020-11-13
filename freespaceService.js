@@ -1,10 +1,10 @@
 const pgp = require('pg-promise')();
 const db = pgp({
-    host: process.env.DB_SERVER,
+    host: process.env.SERVER,
     port: 5432,
-    database: process.env.DB_USER,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD
+    database: process.env.USER,
+    user: process.env.USER,
+    password: process.env.PASSWORD
 });
 
 
@@ -46,7 +46,6 @@ function readHelloMessage(req, res) {
 }
 
 function readCurrentPopulation(req, res, next) {
-    console.log("s")
     db.many("SELECT * FROM currentpopulation")
         .then(data => {
             res.send(data);
