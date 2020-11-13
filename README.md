@@ -9,7 +9,8 @@ This is the data service application for the Freespace application
  https://calvinfreespace.herokuapp.com/
 
 
-URL 
+URL:
+
 https://calvinfreespace.herokuapp.com/locations
 
 https://calvinfreespace.herokuapp.com/currentStatus
