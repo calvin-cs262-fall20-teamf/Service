@@ -7,6 +7,7 @@ const db = pgp({
     password: process.env.DB_PASSWORD
 });
 
+
 // Configure the server and its routes.
 
 const express = require('express');
