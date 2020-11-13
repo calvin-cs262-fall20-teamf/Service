@@ -17,8 +17,8 @@ const router = express.Router();
 router.use(express.json());
 
 router.get("/", readHelloMessage);
-router.get("/curentpopulation", readCurrentPopulation);
-router.get("/users", readUsers);
+// router.get("/curentpopulation", readCurrentPopulation);
+// router.get("/users", readUsers);
 
 app.use(router);
 app.use(errorHandler);
@@ -45,23 +45,23 @@ function readHelloMessage(req, res) {
     res.send('Hello, CS 262 Monopoly service!');
 }
 
-function readCurrentPopulation(req, res, next) {
-    console.log("s")
-    db.many("SELECT * FROM currentpopulation")
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            next(err);
-        })
-}
+// function readCurrentPopulation(req, res, next) {
+//     console.log("s")
+//     db.many("SELECT * FROM currentpopulation")
+//         .then(data => {
+//             res.send(data);
+//         })
+//         .catch(err => {
+//             next(err);
+//         })
+// }
 
-function readCurrentPopulation(req, res, next) {
-    db.many("SELECT * FROM users")
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            next(err);
-        })
-}
+// function readCurrentPopulation(req, res, next) {
+//     db.many("SELECT * FROM users")
+//         .then(data => {
+//             res.send(data);
+//         })
+//         .catch(err => {
+//             next(err);
+//         })
+// }
