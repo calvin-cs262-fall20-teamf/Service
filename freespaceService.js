@@ -17,8 +17,9 @@ const router = express.Router();
 router.use(express.json());
 
 router.get("/", readHelloMessage);
-// router.get("/players", readPlayers);
-// router.get("/players/:id", readPlayer);
+router.get("/locations", readLocations);
+router.get("/location/:id", readLocation);
+router.get("/currentStatus", readCurrentStatus)
 // router.put("/players/:id", updatePlayer);
 // router.post('/players', createPlayer);
 // router.delete('/players/:id', deletePlayer);
@@ -46,4 +47,34 @@ function returnDataOr404(res, data) {
 
 function readHelloMessage(req, res) {
     res.send('Hello, CS 262 Monopoly service!');
+}
+
+function readLocations(req, res, next) {
+    db.many("SELECT * FROM Locations")
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+function readLocation(req, res, next) {
+    db.oneOrNone(`SELECT * FROM Locations WHERE id=${req.params.id}`)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function readCurrentStatus(req, res, next) {
+    db.many("SELECT * FROM CurrentStatus")
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
 }
