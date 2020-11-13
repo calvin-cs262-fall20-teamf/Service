@@ -1,10 +1,10 @@
 const pgp = require('pg-promise')();
 const db = pgp({
-    host: process.env.DB_SERVER,
+    host: process.env.SERVER,
     port: 5432,
-    database: process.env.DB_USER,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD
+    database: process.env.USER,
+    user: process.env.USER,
+    password: process.env.PASSWORD
 });
 
 
@@ -16,13 +16,13 @@ const port = process.env.PORT || 3000;
 const router = express.Router();
 router.use(express.json());
 
+//URLS
 router.get("/", readHelloMessage);
 router.get("/locations", readLocations);
 router.get("/location/:id", readLocation);
 router.get("/currentStatus", readCurrentStatus)
-// router.put("/players/:id", updatePlayer);
-// router.post('/players', createPlayer);
-// router.delete('/players/:id', deletePlayer);
+router.get("/currentpopulation", readCurrentPopulation);
+router.get("/users", readUsers);
 
 app.use(router);
 app.use(errorHandler);
@@ -46,7 +46,7 @@ function returnDataOr404(res, data) {
 }
 
 function readHelloMessage(req, res) {
-    res.send('Hello, CS 262 Monopoly service!');
+    res.send('Welcome to Freespace Database!');
 }
 
 function readLocations(req, res, next) {
@@ -58,6 +58,7 @@ function readLocations(req, res, next) {
             next(err);
         })
 }
+
 
 function readLocation(req, res, next) {
     db.oneOrNone(`SELECT * FROM Locations WHERE id=${req.params.id}`)
@@ -77,4 +78,25 @@ function readCurrentStatus(req, res, next) {
         .catch(err => {
             next(err);
         })
+}
+
+
+function readCurrentPopulation(req, res, next) {
+    db.many("SELECT * FROM currentpopulation")
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        next(err);
+    });
+}
+
+function readUsers(req, res, next) {
+    db.many('SELECT * FROM users')
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        next(err);
+    });
 }
