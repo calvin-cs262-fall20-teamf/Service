@@ -33,17 +33,11 @@ router.get("/", readHelloMessage);
 router.get("/curentpopulation", readCurrentPopulation);
 router.get("/users", readUsers);
 
-app.configure(function () {
-    app.use(allowCrossDomain);
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
-    app.use(app.router);
-    app.use(express.static(path.join(application_root, "public")));
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-    app.listen(port, () => console.log(`Listening on port ${port}`));
+app.use(allowCrossDomain);
+app.use(router);
+app.use(errorHandler);
+app.listen(port, () => console.log(`Listening on port ${port}`));
 
-  });
-  
 // Implement the CRUD operations.
 
 function errorHandler(err, req, res) {
