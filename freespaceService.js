@@ -71,7 +71,7 @@ function readCurrentPopulations(req, res, next) {
 }
 
 function readCurrentPopulation(req, res, next) {
-    db.oneOrNone('SELECT * FROM currentpopulation WHERE id=${id}', req.params)
+    db.oneOrNone('SELECT * FROM currentpopulation WHERE idnumber=${id}', req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
