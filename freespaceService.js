@@ -37,7 +37,7 @@ router.get("/locations/:id", readLocation);
 router.get("/currentstatus", readCurrentStatus);
 router.get("/currentstatus/:id", readCurrentStatusid);
 router.get("/currentpopulations", readCurrentPopulations);
-router.get("/currentpopulation/:id", readCurrentPopulation);
+router.get("/currentpopulations/:id", readCurrentPopulation);
 router.get("/users", readUsers);
 
 app.use(allowCrossDomain);
