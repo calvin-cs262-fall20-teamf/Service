@@ -30,7 +30,8 @@ const router = express.Router();
 router.use(express.json());
 
 router.get("/", readHelloMessage);
-router.get("/curentpopulation", readCurrentPopulation);
+router.get("/curentpopulation", readCurrentPopulations);
+router.get("/curentpopulation/:id", readCurrentPopulation);
 router.get("/users", readUsers);
 
 app.use(allowCrossDomain);
@@ -59,7 +60,7 @@ function readHelloMessage(req, res) {
     res.send('Hello, CS 262 Monopoly service!');
 }
 
-function readCurrentPopulation(req, res, next) {
+function readCurrentPopulations(req, res, next) {
     db.many("SELECT * FROM currentpopulation")
         .then(data => {
             res.send(data);
@@ -67,6 +68,16 @@ function readCurrentPopulation(req, res, next) {
         .catch(err => {
             next(err);
         })
+}
+
+function readCurrentPopulation(req, res, next) {
+    db.oneOrNone('SELECT * FROM currentpopulation WHERE id=${id}', req.params)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
 }
 
 function readUsers(req, res, next) {
