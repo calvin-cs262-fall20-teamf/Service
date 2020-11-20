@@ -139,9 +139,9 @@ function readUsers(req, res, next) {
 }
 
 function readReports(req, res, next) {
-    db.oneOrNone("SELECT * FROM Locations t1, currentStatus t2, currentPopulation t3 WHERE t1.idnumber = t2.locationid AND t2.locationid = t3.locationid")
+    db.many("SELECT * FROM Locations t1, currentStatus t2, currentPopulation t3 WHERE t1.idnumber = t2.locationid AND t2.locationid = t3.locationid")
         .then(data => {
-            returnDataOr404(res, data);
+            returnDataOr404(data);
         })
         .catch(err => {
             next(err);
