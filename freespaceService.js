@@ -141,7 +141,7 @@ function readUsers(req, res, next) {
 function readReports(req, res, next) {
     db.many("SELECT * FROM Locations t1, currentStatus t2, currentPopulation t3 WHERE t1.idnumber = t2.locationid AND t2.locationid = t3.locationid")
         .then(data => {
-            returnDataOr404(data);
+            res.send(data);
         })
         .catch(err => {
             next(err);
