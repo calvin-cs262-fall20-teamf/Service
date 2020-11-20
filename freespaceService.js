@@ -7,6 +7,7 @@ const db = pgp({
     password: process.env.PASSWORD
 });
 
+// Reference from https://stackoverflow.com/questions/11001817/allow-cors-rest-request-to-a-express-node-js-application-on-heroku
 var allowCrossDomain = function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -29,8 +30,13 @@ const port = process.env.PORT || 3000;
 const router = express.Router();
 router.use(express.json());
 
+// URLs
 router.get("/", readHelloMessage);
-router.get("/curentpopulation", readCurrentPopulations);
+router.get("/locations", readLocations);
+router.get("/locations/:id", readLocation);
+router.get("/currentstatus", readCurrentStatus);
+router.get("/currentstatus/:id", readCurrentStatusid);
+router.get("/curentpopulations", readCurrentPopulations);
 router.get("/curentpopulation/:id", readCurrentPopulation);
 router.get("/users", readUsers);
 
@@ -58,6 +64,47 @@ function returnDataOr404(res, data) {
 
 function readHelloMessage(req, res) {
     res.send('Hello, CS 262 Monopoly service!');
+}
+
+function readLocations(req, res, next) {
+    db.many("SELECT * FROM Locations")
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+
+function readLocation(req, res, next) {
+    db.oneOrNone(`SELECT * FROM Locations WHERE idnumber=${req.params.id}`)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+function readCurrentStatus(req, res, next) {
+    db.many("SELECT * FROM CurrentStatus")
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+function readCurrentStatusid(req, res, next) {
+    db.oneOrNone(`SELECT * FROM readCurrentStatus WHERE idnumber=${req.params.id}`)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
 }
 
 function readCurrentPopulations(req, res, next) {
