@@ -52,11 +52,11 @@ GRANT SELECT ON Users TO PUBLIC;
 
 -- Sample data to populate the tables
 INSERT INTO Locations (LocationName, MaxCapacity, imageLocation) VALUES
-    ('Commons Dining Hall', 500, 'require(''../assets/locations/commons.jpg'')'),
-    ('Knollcrest Dining Hall', 400, 'require(''../assets/locations/knollcrest.jpg'')'),
-    ('Uppercrust', 100, 'require(''../assets/locations/uppercrust.jpg'')'),
-    ('Johnny''s', 100, 'require(''../assets/locations/johnnys2.jpg'')'),
-    ('Peet''s', 50, 'require(''../assets/locations/peets.jpg'')')
+    ('Commons Dining Hall', 500, '../assets/locations/commons.jpg'),
+    ('Knollcrest Dining Hall', 400, '../assets/locations/knollcrest.jpg'),
+    ('Uppercrust', 100, '../assets/locations/uppercrust.jpg'),
+    ('Johnny''s', 100, '../assets/locations/johnnys2.jpg'),
+    ('Peet''s', 50, '../assets/locations/peets.jpg')
     ;
 
 INSERT INTO Users (UserId, UserPassword, UserType) VALUES 
