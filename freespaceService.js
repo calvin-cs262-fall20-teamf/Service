@@ -39,6 +39,7 @@ router.get("/currentstatus/:id", readCurrentStatusid);
 router.get("/currentpopulations", readCurrentPopulations);
 router.get("/currentpopulations/:id", readCurrentPopulation);
 router.get("/users", readUsers);
+router.get("/reports", readReports);
 
 app.use(allowCrossDomain);
 app.use(router);
@@ -78,7 +79,7 @@ function readLocations(req, res, next) {
 
 
 function readLocation(req, res, next) {
-    db.oneOrNone(`SELECT * FROM Locations WHERE idnumber=${req.params.id}`)
+    db.oneOrNone("SELECT * FROM Locations WHERE idnumber=${req.params.id}")
         .then(data => {
             returnDataOr404(res, data);
         })
@@ -135,4 +136,14 @@ function readUsers(req, res, next) {
         .catch(err => {
             next(err);
         })
+}
+
+function readReports(req, res, next) {
+    db.oneOrNone("SELECT * FROM Locations t1, currentStatus t2, currentPopulation t3 WHERE t1.idnumber = t2.locaitonid AND t2.locationid = t3.locationid")
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
 }
