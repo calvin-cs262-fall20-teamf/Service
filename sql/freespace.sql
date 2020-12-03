@@ -14,7 +14,8 @@ DROP TABLE IF EXISTS Users;
 CREATE TABLE Locations (
     IdNumber SERIAL PRIMARY KEY,
     LocationName varchar(40),
-    MaxCapacity int
+    MaxCapacity int,
+    imageLocation varchar(50)
     );
 
 -- List of current status reports made by users
@@ -50,10 +51,12 @@ GRANT SELECT ON CurrentPopulation TO PUBLIC;
 GRANT SELECT ON Users TO PUBLIC;
 
 -- Sample data to populate the tables
-INSERT INTO Locations (LocationName, MaxCapacity) VALUES
-    ('Commons Dining Hall', 500),
-    ('Knollcrest Dining Hall', 400),
-    ('Uppercrust', 100)
+INSERT INTO Locations (LocationName, MaxCapacity, imageLocation) VALUES
+    ('Commons Dining Hall', 500, '../assets/locations/commons.jpg'),
+    ('Knollcrest Dining Hall', 400, '../assets/locations/knollcrest.jpg'),
+    ('Uppercrust', 100, '../assets/locations/uppercrust.jpg'),
+    ('Johnny''s', 100, '../assets/locations/johnnys2.jpg'),
+    ('Peet''s', 50, '../assets/locations/peets.jpg')
     ;
 
 INSERT INTO Users (UserId, UserPassword, UserType) VALUES 
@@ -71,7 +74,7 @@ INSERT INTO CurrentStatus( ActivityStatus, LocationID, ReportedTime) VALUES
     ;
 
 
-INSERT INTO CurrentPopulation(LocationId, EstimatedPopulation, ReportedTime, ReportedDay, CardSwipeNumber)VALUES
+INSERT INTO CurrentPopulation(LocationId, EstimatedPopulation, ReportedTime, ReportedDay, CardSwipeNumber) VALUES
     (1, 200, '13:30:00', 'Monday', 100),
     (1, 150, '13:45:00', 'Monday', 50),
     (2, 150,  '13:30:00', 'Monday', 60),
