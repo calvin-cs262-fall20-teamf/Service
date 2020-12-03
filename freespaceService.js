@@ -1,7 +1,12 @@
+/* 
+ * This module implements a REST-insipired webservice for the Freespace DB.
+ * The database is hosted on ElephantSQL.
+ * 
+ */
 const pgp = require('pg-promise')();
 const db = pgp({
-    host: process.env.SERVER,
-    port: 5432,
+    host: process.env.HOST,
+    port: process.env.HOST,
     database: process.env.USER,
     user: process.env.USER,
     password: process.env.PASSWORD
@@ -22,8 +27,7 @@ var allowCrossDomain = function(req, res, next) {
     }
 };
 
-// Configure the server and its routes.
-
+// Configure the server and its routes
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -35,9 +39,7 @@ router.get("/", readHelloMessage);
 router.get("/locations", readLocations);
 router.get("/locations/:id", readLocation);
 router.get("/currentstatus", readCurrentStatus);
-router.get("/currentstatus/:id", readCurrentStatusid);
 router.get("/currentpopulations", readCurrentPopulations);
-router.get("/currentpopulations/:id", readCurrentPopulation);
 router.get("/users", readUsers);
 router.get("/reports", readReports);
 
@@ -47,7 +49,6 @@ app.use(errorHandler);
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
 // Implement the CRUD operations.
-
 function errorHandler(err, req, res) {
     if (app.get('env') === "development") {
         console.log(err);
@@ -77,9 +78,8 @@ function readLocations(req, res, next) {
         })
 }
 
-
 function readLocation(req, res, next) {
-    db.oneOrNone("SELECT * FROM Locations WHERE idnumber=${req.params.id}")
+    db.oneOrNone("SELECT * FROM Locations WHERE idnumber=${id}", req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
@@ -98,16 +98,6 @@ function readCurrentStatus(req, res, next) {
         })
 }
 
-function readCurrentStatusid(req, res, next) {
-    db.oneOrNone(`SELECT * FROM readCurrentStatus WHERE idnumber=${req.params.id}`)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
 function readCurrentPopulations(req, res, next) {
     db.many("SELECT * FROM currentpopulation")
         .then(data => {
@@ -116,16 +106,6 @@ function readCurrentPopulations(req, res, next) {
         .catch(err => {
             next(err);
         })
-}
-
-function readCurrentPopulation(req, res, next) {
-    db.oneOrNone('SELECT * FROM currentpopulation WHERE idnumber=${id}', req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
 }
 
 function readUsers(req, res, next) {
