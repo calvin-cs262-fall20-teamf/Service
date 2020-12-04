@@ -33,15 +33,14 @@ router.use(express.json());
 router.get("/", readHelloMessage);
 router.get("/locations", readLocations);
 router.get("/locations/:id", readLocation);
-router.get("/currentstatus", readCurrentStatus);
-router.get("/currentstatus/:id", readCurrentStatusid);
+router.get("/statusreports", readCurrentStatus);
+router.get("/statusreports/:id", readCurrentStatusid);
 router.get("/currentpopulations", readCurrentPopulations);
 router.get("/currentpopulations/:id", readCurrentPopulation);
-router.get("/users", readUsers);
-router.get("/reports", readReports);
+router.get("/locationstatus", readLocationStatuses);
 
 // POST
-router.post('/currentstatus', createReport);
+router.post('/statusreports', createReport);
 
 app.use(allowCrossDomain);
 app.use(router);
@@ -69,7 +68,7 @@ function readHelloMessage(req, res) {
 }
 
 function readLocations(req, res, next) {
-    db.many("SELECT * FROM Locations")
+    db.many("SELECT * FROM Location")
         .then(data => {
             res.send(data);
         })
@@ -79,7 +78,7 @@ function readLocations(req, res, next) {
 }
 
 function readLocation(req, res, next) {
-    db.oneOrNone("SELECT * FROM Locations WHERE idnumber=${req.params.id}")
+    db.oneOrNone("SELECT * FROM Location WHERE ID=${req.params.id}")
         .then(data => {
             returnDataOr404(res, data);
         })
@@ -89,7 +88,7 @@ function readLocation(req, res, next) {
 }
 
 function readCurrentStatus(req, res, next) {
-    db.many("SELECT * FROM CurrentStatus")
+    db.many("SELECT * FROM StatusReport")
         .then(data => {
             res.send(data);
         })
@@ -99,7 +98,7 @@ function readCurrentStatus(req, res, next) {
 }
 
 function readCurrentStatusid(req, res, next) {
-    db.oneOrNone(`SELECT * FROM readCurrentStatus WHERE idnumber=${req.params.id}`)
+    db.oneOrNone(`SELECT * FROM StatusReport WHERE ID=${req.params.id}`)
         .then(data => {
             returnDataOr404(res, data);
         })
@@ -109,7 +108,7 @@ function readCurrentStatusid(req, res, next) {
 }
 
 function readCurrentPopulations(req, res, next) {
-    db.many("SELECT * FROM currentpopulation")
+    db.many("SELECT * FROM CurrentPopulation")
         .then(data => {
             res.send(data);
         })
@@ -119,7 +118,7 @@ function readCurrentPopulations(req, res, next) {
 }
 
 function readCurrentPopulation(req, res, next) {
-    db.oneOrNone('SELECT * FROM currentpopulation WHERE idnumber=${id}', req.params)
+    db.oneOrNone('SELECT * FROM CurrentPopulation WHERE ID=${id}', req.params)
         .then(data => {
             returnDataOr404(res, data);
         })
@@ -128,18 +127,12 @@ function readCurrentPopulation(req, res, next) {
         });
 }
 
-function readUsers(req, res, next) {
-    db.many("SELECT * FROM users")
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            next(err);
-        })
-}
 
-function readReports(req, res, next) {
-    db.many("SELECT * FROM Locations t1, currentStatus t2, currentPopulation t3 WHERE t1.idnumber = t2.locationid AND t2.locationid = t3.locationid")
+function readLocationStatuses(req, res, next) {
+    db.many("SELECT LocationID as key, LocationID, name, AVG(status) as statusAverage FROM StatusReport, Location \
+             WHERE LocationID = Location.ID \
+             GROUP BY name, LocationID \
+             ORDER BY LocationID")
         .then(data => {
             res.send(data);
         })
@@ -151,7 +144,7 @@ function readReports(req, res, next) {
 
 // POST methods
 function createReport(req, res, next) {
-    db.one('INSERT INTO CurrentStatus(ActivityStatus, LocationID, ReportedTime) VALUES (${ActivityStatus}, ${LocationID}, NOW()) RETURNING LocationID', req.body)
+    db.one('INSERT INTO StatusReport(status, locationID, reportedTime) VALUES (${status}, ${locationid}, NOW())', req.body)
         .then(data => {
             res.send(data);
         })
