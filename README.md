@@ -16,7 +16,7 @@ https://calvinfreespace.herokuapp.com/locations
 
 https://calvinfreespace.herokuapp.com/statusreports
 
-https://calvinfreespace.herokuapp.com/currentpopulation
+https://calvinfreespace.herokuapp.com/currentpopulations
 
 https://calvinfreespace.herokuapp.com/locationstatus
 
