@@ -4,7 +4,7 @@
 
 -- Get the list of user reports
 SELECT *
-  FROM CurrentStatus
+  FROM StatusReport
   ;
 
 -- Get the list of number of card swipes report
@@ -14,22 +14,12 @@ SELECT *
 
 -- Get the list of Calvin locations registered in the system
 SELECT *
-  FROM Locations
+  FROM Location
  ;
 
- -- Get all the users registered to the app
-SELECT *
-  FROM Users
- ;
 
 -- Get the list of locations with capacity greater than 300
-SELECT LocationName
-  FROM Locations
+SELECT name
+  FROM Location
   WHERE MaxCapacity > 300
    ;
-
--- Get the cross-product of all the tables.
-SELECT UserId
-  FROM Users
-  WHERE UserType = 'Dining Hall Faculty'
-  ;
