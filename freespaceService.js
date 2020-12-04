@@ -37,7 +37,7 @@ router.get("/statusreports", readCurrentStatus);
 router.get("/statusreports/:id", readCurrentStatusid);
 router.get("/currentpopulations", readCurrentPopulations);
 router.get("/currentpopulations/:id", readCurrentPopulation);
-router.get("/reports", readReports);
+router.get("/locationstatus", readLocationStatuses);
 
 // POST
 router.post('/currentstatus', createReport);
@@ -128,7 +128,7 @@ function readCurrentPopulation(req, res, next) {
 }
 
 
-function readReports(req, res, next) {
+function readLocationStatuses(req, res, next) {
     db.many("SELECT LocationID, AVG(status) FROM StatusReport GROUP BY LocationID ORDER BY LocationID")
         .then(data => {
             res.send(data);
