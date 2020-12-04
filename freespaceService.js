@@ -40,7 +40,7 @@ router.get("/currentpopulations/:id", readCurrentPopulation);
 router.get("/locationstatus", readLocationStatuses);
 
 // POST
-router.post('/currentstatus', createReport);
+router.post('/statusreports', createReport);
 
 app.use(allowCrossDomain);
 app.use(router);
@@ -129,10 +129,10 @@ function readCurrentPopulation(req, res, next) {
 
 
 function readLocationStatuses(req, res, next) {
-    db.many("SELECT LocationID, AVG(status), name FROM StatusReport, Location \
-                WHERE LocationID = Location.ID \
-                GROUP BY name, LocationID \
-                ORDER BY LocationID")
+    db.many("SELECT LocationID as key, LocationID, name, AVG(status) as statusAverage FROM StatusReport, Location \
+             WHERE LocationID = Location.ID \
+             GROUP BY name, LocationID \
+             ORDER BY LocationID")
         .then(data => {
             res.send(data);
         })
