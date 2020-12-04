@@ -14,11 +14,11 @@ We implement this as a separate repo to simplify Heroku integration.
 
 https://calvinfreespace.herokuapp.com/locations
 
-https://calvinfreespace.herokuapp.com/currentStatus
+https://calvinfreespace.herokuapp.com/statusreports
 
-https://calvinfreespace.herokuapp.com/currentPopulation
+https://calvinfreespace.herokuapp.com/currentpopulation
 
-https://calvinfreespace.herokuapp.com/users
+https://calvinfreespace.herokuapp.com/locationstatus
 
 
 # Other Freespace Repos
