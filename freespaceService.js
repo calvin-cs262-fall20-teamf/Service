@@ -42,6 +42,12 @@ router.get("/locationstatus", readLocationStatuses);
 // POST
 router.post('/statusreports', createReport);
 
+// PUT
+router.put('/statusreports/:id', updateReport);
+
+// DELETE
+router.delete('/statusreports/:id', deleteReport)
+
 app.use(allowCrossDomain);
 app.use(router);
 app.use(errorHandler);
@@ -66,6 +72,8 @@ function returnDataOr404(res, data) {
 function readHelloMessage(req, res) {
     res.send('Welcome to Freespace Database!');
 }
+
+// GET (read) functions
 
 function readLocations(req, res, next) {
     db.many("SELECT * FROM Location")
@@ -142,11 +150,33 @@ function readLocationStatuses(req, res, next) {
 }
 
 
-// POST methods
+// POST (create) methods
 function createReport(req, res, next) {
     db.one('INSERT INTO StatusReport(status, locationID, reportedTime) VALUES (${status}, ${locationid}, NOW())', req.body)
         .then(data => {
             res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// PUT (update) methods
+function updateReport(req, res, next) {
+    db.oneOrNone('UPDATE StatusReport SET status=${body.status}, locationID={body.locationid}, reportedTime=NOW() WHERE id=${params.id} RETURNING id', req)
+        .then(data => {
+            returnDataOr404(res, data);
+        })
+        .catch(err => {
+            next(err);
+        });
+}
+
+// DELETE (delete) methods
+function deleteReport(req, res, next) {
+    db.oneOrNone('DELETE FROM StatusReport WHERE id=${id} RETURNING id', req.params)
+        .then(data => {
+            returnDataOr404(res, data);
         })
         .catch(err => {
             next(err);
