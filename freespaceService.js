@@ -35,8 +35,6 @@ router.get("/locations", readLocations);
 router.get("/locations/:id", readLocation);
 router.get("/statusreports", readCurrentStatus);
 router.get("/statusreports/:id", readCurrentStatusid);
-router.get("/currentpopulations", readCurrentPopulations);
-router.get("/currentpopulations/:id", readCurrentPopulation);
 router.get("/locationstatus", readLocationStatuses);
 
 // URL for POST
@@ -89,7 +87,7 @@ function readLocations(req, res, next) {
 
 // Gets record in Location table with specified ID
 function readLocation(req, res, next) {
-    db.oneOrNone("SELECT * FROM Location WHERE ID=${req.params.id}")
+    db.oneOrNone(`SELECT * FROM Location WHERE ID=${req.params.id}`)
         .then(data => {
             returnDataOr404(res, data);
         })
@@ -120,36 +118,22 @@ function readCurrentStatusid(req, res, next) {
         });
 }
 
-// Gets all records from CurrentPopulation table
-function readCurrentPopulations(req, res, next) {
-    db.many("SELECT * FROM CurrentPopulation")
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            next(err);
-        })
-}
-
-// Gets record in CurrentPopulation table with specified ID
-function readCurrentPopulation(req, res, next) {
-    db.oneOrNone('SELECT * FROM CurrentPopulation WHERE ID=${id}', req.params)
-        .then(data => {
-            returnDataOr404(res, data);
-        })
-        .catch(err => {
-            next(err);
-        });
-}
-
 // Joins the StatusReport and Location tables and returns a table specifying the average status for each location
-// Ordered by the locations' ID numbers.
-// Only takes the reports that have been submitted within the last two hours.
+//  Ordered by the locations' ID numbers.
+//  Only takes the reports that have been submitted within the last two hours along with the
+//  basis zero-value reports (used for averaging).
 function readLocationStatuses(req, res, next) {
-    db.many("SELECT LocationID as key, LocationID, name, AVG(status) as statusAverage FROM StatusReport, Location \
-             WHERE LocationID = Location.ID \
-             GROUP BY name, LocationID \
-             ORDER BY LocationID")
+    db.many("SELECT LocationID as key, LocationID, name, AVG(status) as statusAverage FROM \
+                (\
+                    SELECT *\
+                    FROM StatusReport \
+                    WHERE reportedTime >= NOW() - INTERVAL '2 hours' \
+                    OR date(reportedTime) = '2020-1-20' \
+                ) AS FilterQuery, Location \
+                WHERE LocationID = Location.ID \
+                GROUP BY name, LocationID \
+                ORDER BY LocationID \
+            ;")
         .then(data => {
             res.send(data);
         })
@@ -164,8 +148,8 @@ function readLocationStatuses(req, res, next) {
  ********************/
 
 // Creates a new record in the StatusReport table.
-// Record is created with the given status and locationID.
-// reportedTime is generated automatically and is set to the time when the report was submitted.
+//  Record is created with the given status and locationID.
+//  reportedTime is generated automatically and is set to the time when the report was submitted.
 function createReport(req, res, next) {
     db.one('INSERT INTO StatusReport(status, locationID, reportedTime) VALUES (${status}, ${locationid}, NOW())', req.body)
         .then(data => {
@@ -181,8 +165,8 @@ function createReport(req, res, next) {
  ********************/
 
 // Updates an existing record with the specified ID in the StatusReport table.
-// Record is updated with the given status and locationID.
-// reportedTime is updated automatically and is set to the time when the report was updated.
+//  Record is updated with the given status and locationID.
+//  reportedTime is updated automatically and is set to the time when the report was updated.
 function updateReport(req, res, next) {
     db.oneOrNone('UPDATE StatusReport SET status=${body.status}, locationID={body.locationid}, reportedTime=NOW() WHERE id=${params.id} RETURNING id', req)
         .then(data => {
