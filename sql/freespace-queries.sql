@@ -37,7 +37,7 @@ SELECT LocationID as key, LocationID, name, AVG(status) as statusAverage
 -- Similar to the above query, but only takes the reports that have been submitted 
 --  within the last two hours OR the reports that have been submitted on January 20, 2020
 -- (we use this date for the initial zero-value records in the StatusReport table).
-SELECT LocationID as key, LocationID, name, AVG(status) as statusAverage 
+SELECT LocationID as key, LocationID, name, maxCapacity, AVG(status) as statusAverage 
   FROM
   (
     SELECT *
@@ -46,6 +46,6 @@ SELECT LocationID as key, LocationID, name, AVG(status) as statusAverage
     OR date(reportedTime) = '2020-1-20'
   ) AS FilterQuery, Location
   WHERE LocationID = Location.ID
-  GROUP BY name, LocationID
+  GROUP BY name, LocationID, maxCapacity
   ORDER BY LocationID
 ;

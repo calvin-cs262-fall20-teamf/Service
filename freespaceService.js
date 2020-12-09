@@ -123,7 +123,7 @@ function readCurrentStatusid(req, res, next) {
 //  Only takes the reports that have been submitted within the last two hours along with the
 //  basis zero-value reports (used for averaging).
 function readLocationStatuses(req, res, next) {
-    db.many("SELECT LocationID as key, LocationID, name, AVG(status) as statusAverage FROM \
+    db.many("SELECT LocationID as key, LocationID, name, maxCapacity, AVG(status) as statusAverage FROM \
                 (\
                     SELECT *\
                     FROM StatusReport \
@@ -131,7 +131,7 @@ function readLocationStatuses(req, res, next) {
                     OR date(reportedTime) = '2020-1-20' \
                 ) AS FilterQuery, Location \
                 WHERE LocationID = Location.ID \
-                GROUP BY name, LocationID \
+                GROUP BY name, LocationID, maxCapacity \
                 ORDER BY LocationID \
             ;")
         .then(data => {
