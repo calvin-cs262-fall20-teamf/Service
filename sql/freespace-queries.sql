@@ -18,10 +18,10 @@ SELECT LocationName
   WHERE MaxCapacity > 100
   ;
 
--- Get the reports that have been submitted within the past two hours
+-- Get the reports that have been submitted within the past one hour
 SELECT *
   FROM StatusReport
-  WHERE reportedTime >= NOW() - INTERVAL '2 hours'
+  WHERE reportedTime >= NOW() - INTERVAL '1 hour'
   AND 
   ;
 
@@ -35,14 +35,14 @@ SELECT LocationID as key, LocationID, name, AVG(status) as statusAverage
 ;
 
 -- Similar to the above query, but only takes the reports that have been submitted 
---  within the last two hours OR the reports that have been submitted on January 20, 2020
+--  within the last one hour OR the reports that have been submitted on January 20, 2020
 -- (we use this date for the initial zero-value records in the StatusReport table).
 SELECT LocationID as key, LocationID, name, maxCapacity, AVG(status) as statusAverage, COUNT(*) as numReports
   FROM
   (
     SELECT *
     FROM StatusReport
-    WHERE reportedTime >= NOW() - INTERVAL '2 hours'
+    WHERE reportedTime >= NOW() - INTERVAL '1 hour'
     OR date(reportedTime) = '2020-1-20'
   ) AS FilterQuery, Location
   WHERE LocationID = Location.ID
