@@ -120,7 +120,7 @@ function readCurrentStatusid(req, res, next) {
 
 // Joins the StatusReport and Location tables and returns a table specifying the average status for each location
 //  Ordered by the locations' ID numbers.
-//  Only takes the reports that have been submitted within the last two hours along with the
+//  Only takes the reports that have been submitted within the last one hour along with the
 //  basis zero-value reports (used for averaging).
 function readLocationStatuses(req, res, next) {
     db.many("SELECT LocationID as key, LocationID, name, maxCapacity, \
@@ -128,7 +128,7 @@ function readLocationStatuses(req, res, next) {
                 (\
                     SELECT *\
                     FROM StatusReport \
-                    WHERE reportedTime >= NOW() - INTERVAL '2 hours' \
+                    WHERE reportedTime >= NOW() - INTERVAL '1 hour' \
                     OR date(reportedTime) = '2020-1-20' \
                 ) AS FilterQuery, Location \
                 WHERE LocationID = Location.ID \
